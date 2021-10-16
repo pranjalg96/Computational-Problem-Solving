@@ -15,7 +15,7 @@ ASSUMPTIONS:
 */
 
 // Structure for storing distance and predecessor fields of each node. Used in Bellman-Form algorithm
-struct bellman_node
+struct bellman_node 
 {
 	int d; // distance field of node
 	int p; // predecessor
