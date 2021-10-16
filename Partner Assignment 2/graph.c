@@ -1,5 +1,13 @@
 /* 	adjacency list representation of a graph
 */
+
+/*
+Comments
+
+1. Try to make the program more modular. So a function for reading the string, function for adding all the edges, that uses addEdge etc. These are just examples but 
+you should probably do this for every block of computation. The main function should only consist of a small number of functions.
+2. Your for loop over i and j to get pairs of words is redundant, it is adding extra edges in the adjacency list. You should have j = i+1, you can also remove the j != i
+*/
 #include <stdio.h>
 #include <stdlib.h> // has the malloc prototype
 #include <string.h>
@@ -62,9 +70,9 @@ int main(int argc, char *argv[])
 	int destination = atoi(argv[2]); //destination node/word (0<= destination <=499) (destination != source)
 	char *option = argv[3]; // swap transformation option
 	
-	for (int i=0;i<NODES;i++)
+	for (int i=0;i<NODES;i++) 
 	{
-		for (int j=0;j<NODES;j++)
+		for (int j=0;j<NODES;j++) // Comment 2 refers to this 
 		{
 			if (j != i)
 			{
