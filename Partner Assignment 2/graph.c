@@ -56,9 +56,6 @@ int main(int argc, char *argv[])
 	int destination = atoi(argv[2]); //destination node/word (0<= destination <=499) (destination != source)
 	char *option = argv[3]; // swap transformation option
 	
-	Graph* mygraph = InitializeGraph(NODES); //initialize the graph
-	CreateGraph(mygraph,wordlist,option,argc); // Create the graph with all the edges	
-	
 	printGraph(mygraph); // print the graph
 	deleteGraph(mygraph); // delete the graph to free memory
 	
