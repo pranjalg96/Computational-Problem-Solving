@@ -1,0 +1,7 @@
+This program is compiled by using WSL on Windows 10.
+
+Instructions:
+1) Change the current directory to the correct one (the directory where is located graph.c)
+2) Compile gcc -o graph graph.c
+3)a) NO swap transformation: run ./graph 20 305     (or any other numbers)
+3)b) WITH swap transformation: run ./graph 454 87 s     (or any other numbers; the last argument must be the letter s)
