@@ -53,6 +53,11 @@ int relax(struct bellman_node graph_nodes[], Graph * mygraph, int x, int y);
 void display_path_bellman(struct bellman_node graph_nodes[], int node);
 void Bellman_Ford(struct bellman_node graph_nodes[], Graph * mygraph);
 
+// stack-related functions (to print from source -> target)
+int Push(int stack[], int * size_ptr, int val);
+int Pop(int stack[], int * size_ptr);
+int PrintPath(int stack[], int * size_ptr, int target);
+
 
 int main()
 {
@@ -316,7 +321,7 @@ int relax(struct bellman_node graph_nodes[], Graph * mygraph, int x, int y)
 
 
 /*
-Function to display the path from source to target node, starting from target and tracing backward. (Need to print it the other way. Can use a stack do that.)
+Function to display the path from source to target node, starting from target and tracing backward. (Need to print it the other way. Can use a stack to do that.)
 input:
 graph_nodes - Array of bellman-node objects
 u - target node
@@ -326,19 +331,17 @@ void
 */
 void display_path_bellman(struct bellman_node graph_nodes[], int u)
 {
-	printf("Path to node: %d\n", u);
+	int target = u;
+	int stack[NODES], size=0;
+	
 	while(u != -1)
 	{
-		int v = graph_nodes[u].p;
-
-		if (v != -1)
-			printf(" %d <-", u);
-		else
-			printf(" %d ", u);
-
-		u = v;
+		Push(stack, &size, u);
+		u = graph_nodes[u].p;
 	}
-	printf("\n");
+
+	printf("Path to node: %d\n", target);
+	PrintPath(stack, &size, target);
 }
 
 
@@ -384,5 +387,95 @@ void Bellman_Ford(struct bellman_node graph_nodes[], Graph * mygraph)
 	for(int u = 0; u < NODES; u++)
 	{
 		display_path_bellman(graph_nodes, u);
+	}
+}
+/*
+Function to push an element onto the stack
+inputs:
+stack - The stack data structure, implemented as an array
+size_ptr - int pointer to a int size variable
+val - int value to be pushed into the stack
+
+returns:
+0 if successful, 1 if error
+*/
+
+int Push(int stack[], int * size_ptr, int val)
+{
+	// int size_val = *size_ptr;
+
+	if(*size_ptr < NODES ) //COMPLETE LOGIC
+	{
+		stack[*size_ptr] = val;
+		*size_ptr = *size_ptr + 1;// COMPLETE LOGIC
+
+		return 0;
+	}
+	else 
+	{
+		printf("Insertion error; stack is full\n");
+		return 1;
+	}
+}
+
+/*
+Function to delete an element from the stack
+inputs:
+stack - The stack data structure, implemented as an array
+size_ptr - int pointer to a int size variable
+
+returns:
+returnValue - value at the top of the stack, -1 if error
+*/
+int Pop(int stack[], int * size_ptr)
+{
+	int returnValue;
+	
+	if(*size_ptr > 0) 
+	{	
+		*size_ptr = *size_ptr - 1;
+		returnValue = stack[*size_ptr];	
+		printf("removing %d from stack\n", returnValue);
+	}
+	else
+	{
+		printf("Deletion error; stack is empty\n");
+		returnValue = -1;
+	}	
+	return returnValue;
+}
+
+/*
+Function to print out source->target path 
+inputs:
+stack - The stack data structure, implemented as an array
+size_ptr - int pointer to a int size variable
+target - target node
+
+returns:
+0 if successful, -1 if error
+*/
+int PrintPath(int stack[], int * size_ptr, int target)
+{
+	if(*size_ptr>0)
+	{
+		for(int j = *size_ptr - 1; j >= 0; j--)	// COMPLETE
+		{
+			if (stack[j] != target)
+			{
+				printf("%d -> ",stack[j]);
+			}
+			else
+			{
+				printf("%d ", stack[j]);
+			}
+		}
+		printf("\n");
+		return 0;
+	}
+	else
+	{
+		printf("Printing error; stack is empty\n");
+		return -1;
 	}
 }
