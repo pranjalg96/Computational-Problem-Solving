@@ -50,6 +50,7 @@ int main(int argc, char *argv[])
 	// WordArray(fp, wordlist); // This function is only reading the last word 'zone' again and again
 
 	//print the list of words
+
 	for (int j=0;j<NODES;j++)
 	{
 		for (int k = 0;k<WORDSIZE;k++)
@@ -68,6 +69,9 @@ int main(int argc, char *argv[])
 
 	Graph * mygraph = InitializeGraph(NODES); // Initialize graph
 	CreateGraph(mygraph, wordlist, option, argc); // Create word graph
+	
+	Graph* mygraph = InitializeGraph(NODES); //initialize the graph
+	CreateGraph(mygraph,wordlist,option,argc); // Create the graph with all the edges	
 	
 	printGraph(mygraph); // print the graph
 	deleteGraph(mygraph); // delete the graph to free memory
@@ -184,7 +188,7 @@ void WordArray(FILE* fp, char wordlist[NODES][WORDSIZE])
 	
 	for (int i=0;i<NODES;i++)
 	{
-		fscanf(fp,"%s", word); //scan the word line by line
+		fscanf(fp,"%s", word); //scan the word line by line		
 		strcpy(wordlist[i],word);//store the word into the array
 	}
 }
