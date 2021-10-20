@@ -34,12 +34,22 @@ int main(int argc, char *argv[])
 	{
 		printf("Error while opening the word file\n");
 	}
-		
-	char wordlist[NODES][WORDSIZE]; // 2d array that contains the words
-	WordArray(fp, wordlist);
 	
+	char wordlist[NODES][WORDSIZE]; // 2d array that contains the words. 1 extra character for '\n'
+
+	// First word is not being read properly ('ble' instead of 'able').
+	char word[WORDSIZE+1] = "";
+	
+	for (int i=0;i<NODES;i++)
+	{
+		fscanf(fp,"%s", word); //scan the word line by line
+		strcpy(wordlist[i],word);//store the word into the array
+	}
+
+
+	// WordArray(fp, wordlist); // This function is only reading the last word 'zone' again and again
+
 	//print the list of words
-	/*
 	for (int j=0;j<NODES;j++)
 	{
 		for (int k = 0;k<WORDSIZE;k++)
@@ -48,13 +58,16 @@ int main(int argc, char *argv[])
 		}
 		printf("\n");
 	}
-	*/	
+
 	
 	fclose(fp); //close the file to free memory
-	
+
 	int source = atoi(argv[1]); // source node/word (0<= source <= 499)
 	int destination = atoi(argv[2]); //destination node/word (0<= destination <=499) (destination != source)
 	char *option = argv[3]; // swap transformation option
+
+	Graph * mygraph = InitializeGraph(NODES); // Initialize graph
+	CreateGraph(mygraph, wordlist, option, argc); // Create word graph
 	
 	printGraph(mygraph); // print the graph
 	deleteGraph(mygraph); // delete the graph to free memory
@@ -183,7 +196,7 @@ mygraph - graph in which you are working
 wordlist - 2d array that contains the words
 option,argc - contains (or not) the swap transformation option
 */
-void CreateGraph(Graph* mygraph, char wordlist[NODES][WORDSIZE], char *option,int argc)
+void CreateGraph(Graph* mygraph, char wordlist[NODES][WORDSIZE], char *option, int argc)
 {
 	for (int i=0;i<NODES;i++)
 	{
