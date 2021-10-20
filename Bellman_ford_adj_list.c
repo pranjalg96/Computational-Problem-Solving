@@ -12,6 +12,7 @@ ASSUMPTIONS:
 2. Declared an array of objects for the bellman-ford nodes. 
 3. Adjacency list using pointer of pointer. 
 4. Max distance between any two nodes will not exceed INF
+5. Source node is excluded from nodes "reachable" from source node
 */
 
 // Structure for storing distance and predecessor fields of each node. Used in Bellman-Form algorithm
@@ -50,7 +51,7 @@ int deleteGraph(Graph* mygraph);
 void initialize_nodes_bellman(struct bellman_node graph_nodes[], int source);
 void display_nodes_bellman(struct bellman_node graph_nodes[]);
 int relax(struct bellman_node graph_nodes[], Graph * mygraph, int x, int y);
-void display_path_bellman(struct bellman_node graph_nodes[], int node);
+int display_path_bellman(struct bellman_node graph_nodes[], int node);
 void Bellman_Ford(struct bellman_node graph_nodes[], Graph * mygraph);
 
 // stack-related functions (to print from source -> target)
@@ -124,16 +125,14 @@ void
 void MakeConnections(Graph * mygraph)
 {
 	// Example undirected graph
-	addEdge(mygraph, 0, 1, 420);
-	addEdge(mygraph, 0, 2, 175);
-	addEdge(mygraph, 1, 0, 420);
-	addEdge(mygraph, 1, 3, 150);
-	addEdge(mygraph, 2, 0, 175);
-	addEdge(mygraph, 2, 3, 400);
-	addEdge(mygraph, 3, 1, 150);
-	addEdge(mygraph, 3, 2, 400);
-	addEdge(mygraph, 3, 4, 100);
-	addEdge(mygraph, 4, 3, 100);
+	addEdge(mygraph, 0, 1, 3);
+	addEdge(mygraph, 1, 0, 3);
+	addEdge(mygraph, 1, 2, 8);
+	addEdge(mygraph, 2, 1, 8);
+	addEdge(mygraph, 0, 2, 7);
+	addEdge(mygraph, 2, 0, 7);
+	addEdge(mygraph, 3, 4, 2);
+	addEdge(mygraph, 4, 3, 2);
 }
 
 /*
@@ -321,27 +320,33 @@ int relax(struct bellman_node graph_nodes[], Graph * mygraph, int x, int y)
 
 
 /*
-Function to display the path from source to target node, starting from target and tracing backward. (Need to print it the other way. Can use a stack to do that.)
+Function to display the path from source to target node
 input:
 graph_nodes - Array of bellman-node objects
 u - target node
 
 returns:
-void
+path_len - Length of path between source and node u
 */
-void display_path_bellman(struct bellman_node graph_nodes[], int u)
+int display_path_bellman(struct bellman_node graph_nodes[], int u)
 {
 	int target = u;
 	int stack[NODES], size=0;
+
+	int path_len = -1; 
 	
 	while(u != -1)
 	{
 		Push(stack, &size, u);
 		u = graph_nodes[u].p;
+
+		path_len++;
 	}
 
 	printf("Path to node: %d\n", target);
 	PrintPath(stack, &size, target);
+
+	return path_len;
 }
 
 
@@ -384,11 +389,37 @@ void Bellman_Ford(struct bellman_node graph_nodes[], Graph * mygraph)
 
 	printf("\nNumber of iterations: %d\n", iter);
 
+	int reachable_nodes = 0; // Number of reachable nodes from source
+	double avg_transform_len = 0.0; // Avg. transformation length
+
 	for(int u = 0; u < NODES; u++)
 	{
-		display_path_bellman(graph_nodes, u);
+		int pred = graph_nodes[u].p; // predecessor node
+		int dist = graph_nodes[u].d; // distance to source node
+ 
+		if (pred == -1 && dist > 0) // If node is not reachable (make sure it is not the source)
+		{
+			printf("Path from source node to node %d doesn't exist! \n", u);
+		}
+		else
+		{
+			int path_len = display_path_bellman(graph_nodes, u);
+
+			if (path_len != 0)
+			{
+				reachable_nodes++;
+				avg_transform_len += path_len;
+			}
+		}
 	}
+
+	avg_transform_len /= reachable_nodes;
+
+	printf("\n\nTotal number of reachable words from source: %d", reachable_nodes);
+	printf("\nAverage number of transformations needed to reach reachable words: %f\n\n", avg_transform_len);
 }
+
+
 /*
 Function to push an element onto the stack
 inputs:
