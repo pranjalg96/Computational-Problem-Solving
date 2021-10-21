@@ -62,11 +62,12 @@ int PrintPath(int stack[], int * size_ptr, int target);
 
 int main()
 {
+	// Add file reading, command line arguments from main function of graph.c
 
 	Graph* mygraph = InitializeGraph(NODES);
 
 	// Make weighted connections in the graph
-	MakeConnections(mygraph);
+	MakeConnections(mygraph); // Use CreateGraph function, edge weight 1
 
 	// Display the graph as an adjacency list
 	printGraph(mygraph);
@@ -75,19 +76,19 @@ int main()
 	struct bellman_node graph_nodes[NODES];
 			  
 	// declare and initialize source node
-	int source = 0;
+	int source = 0; // Add target
 
 	// initialize the node fields
 	initialize_nodes_bellman(graph_nodes, source);
 
 	// run the bellman ford
-	Bellman_Ford(graph_nodes, mygraph);
+	Bellman_Ford(graph_nodes, mygraph); // Add additional arguments like target, wordlist, etc.
 
-	// Display updated node fields after running Bellman-ford
-	display_nodes_bellman(graph_nodes);
+	// Display updated node fields after running Bellman-ford 
+	display_nodes_bellman(graph_nodes); 
 
 	// Free memory used in the adjacency list
-	deleteGraph(mygraph);
+	deleteGraph(mygraph); 
 
 	return 0;
 }
@@ -344,7 +345,7 @@ int display_path_bellman(struct bellman_node graph_nodes[], int u)
 	}
 
 	printf("Path to node: %d\n", target);
-	PrintPath(stack, &size, target);
+	PrintPath(stack, &size, target); // if u == target cmd line, then print path, else don't. Also pass target, wordlist here
 
 	return path_len;
 }
@@ -403,7 +404,7 @@ void Bellman_Ford(struct bellman_node graph_nodes[], Graph * mygraph)
 		}
 		else
 		{
-			int path_len = display_path_bellman(graph_nodes, u);
+			int path_len = display_path_bellman(graph_nodes, u); // add target, wordlist arguments
 
 			if (path_len != 0)
 			{
@@ -486,7 +487,7 @@ target - target node
 returns:
 0 if successful, -1 if error
 */
-int PrintPath(int stack[], int * size_ptr, int target)
+int PrintPath(int stack[], int * size_ptr, int target) // target cmd line
 {
 	if(*size_ptr>0)
 	{
@@ -494,11 +495,11 @@ int PrintPath(int stack[], int * size_ptr, int target)
 		{
 			if (stack[j] != target)
 			{
-				printf("%d -> ",stack[j]);
+				printf("%d -> ",stack[j]); // Print wordlist[stack[j]] instead
 			}
 			else
 			{
-				printf("%d ", stack[j]);
+				printf("%d ", stack[j]); // same here
 			}
 		}
 		printf("\n");
